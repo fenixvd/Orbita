@@ -46,7 +46,7 @@ jobs:
       - name: Зависимости
         run: ${{ matrix.install }}
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Сборка и тесты
         run: |
@@ -63,7 +63,7 @@ jobs:
             [ -e "$f" ] && mv "$f" "${{ matrix.name }}-$f"
           done
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.name }}
           path: |
@@ -74,7 +74,7 @@ jobs:
     needs: packages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: packages
           merge-multiple: true
