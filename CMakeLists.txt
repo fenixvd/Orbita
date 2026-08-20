@@ -123,11 +123,16 @@ if(Qt6LinguistTools_FOUND)
     )
     install(FILES ${orbita_qm_files}
             DESTINATION ${CMAKE_INSTALL_DATADIR}/orbita/translations)
-    target_compile_definitions(orbita-gui PRIVATE
-        ORBITA_TRANSLATIONS_DIR="${CMAKE_INSTALL_FULL_DATADIR}/orbita/translations")
 else()
     message(STATUS "Qt Linguist не найден — сборка без переводов")
 endif()
+
+# Путь задаётся всегда, даже когда переводов не собрали: main.cpp обращается
+# к ORBITA_TRANSLATIONS_DIR безусловно, и внутри if сборка без Linguist
+# попросту не компилировалась. Каталог может оказаться пустым — тогда
+# QTranslator::load вернёт false и интерфейс останется русским.
+target_compile_definitions(orbita-gui PRIVATE
+    ORBITA_TRANSLATIONS_DIR="${CMAKE_INSTALL_FULL_DATADIR}/orbita/translations")
 
 qt_add_resources(orbita-gui "icons"
     PREFIX "/icons"
