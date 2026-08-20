@@ -1,0 +1,28 @@
+# Каталоги сборки и готовые пакеты
+build/
+build-*/
+dist/
+*.rpm
+*.deb
+*.pkg.tar.*
+compile_commands.json
+CMakeUserPresets.json
+
+# Редакторы и среды
+*.user
+.cache/
+.vscode/
+.idea/
+.kdev4/
+*.kdev4
+*.swp
+*~
+
+# Мусор запусков
+nohup.out
+core.*
+
+# Токен доступа к Диску. Рядом с кодом ему не место никогда —
+# строки на случай, если файлы случайно окажутся в каталоге проекта.
+credentials.json
+config.json

@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Description": "Actions for files on Yandex.Disk",
+        "Description[ru]": "Действия для файлов на Яндекс.Диске",
+        "Icon": "ru.rainedev.orbita",
+        "MimeTypes": [
+            "application/octet-stream",
+            "inode/directory"
+        ],
+        "Name": "Orbita",
+        "Name[ru]": "Orbita"
+    }
+}

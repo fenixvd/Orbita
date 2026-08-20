@@ -1,0 +1,86 @@
+name: Релиз
+
+# Запускается по тегу вида v0.1.0: собирает пакеты и прикладывает их
+# к релизу. Версия берётся из CMakeLists.txt — тег должен ей соответствовать.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  packages:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: opensuse
+            image: opensuse/tumbleweed
+            install: >-
+              zypper --non-interactive install -y gcc-c++ cmake ninja rpm-build tar gzip git
+              qt6-base-devel qt6-declarative-devel kf6-kio-devel
+              kf6-kstatusnotifieritem-devel fuse3-devel sqlite3-devel
+            package: RPM
+          - name: fedora
+            image: fedora:latest
+            install: >-
+              dnf install -y --disablerepo="*openh264*" gcc-c++ cmake ninja-build rpm-build pkgconf-pkg-config tar git
+              qt6-qtbase-devel qt6-qtdeclarative-devel kf6-kio-devel
+              kf6-kstatusnotifieritem-devel fuse3-devel sqlite-devel
+            package: RPM
+          - name: debian
+            image: debian:trixie
+            install: >-
+              apt-get update && apt-get install -y --no-install-recommends
+              build-essential cmake ninja-build pkg-config dpkg-dev file git
+              qt6-base-dev qt6-declarative-dev libkf6kio-dev
+              libkf6statusnotifieritem-dev libfuse3-dev libsqlite3-dev
+            package: DEB
+
+    steps:
+      - name: Зависимости
+        run: ${{ matrix.install }}
+
+      - uses: actions/checkout@v4
+
+      - name: Сборка и тесты
+        run: |
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+          cmake --build build
+          ctest --test-dir build --output-on-failure
+
+      - name: Пакет
+        run: |
+          cd build && cpack -G ${{ matrix.package }}
+          # Имя дистрибутива в названии файла: пакеты RPM из openSUSE
+          # и Fedora иначе не различить.
+          for f in *.rpm *.deb; do
+            [ -e "$f" ] && mv "$f" "${{ matrix.name }}-$f"
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: |
+            build/*.rpm
+            build/*.deb
+
+  release:
+    needs: packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: packages
+          merge-multiple: true
+
+      - name: Создать релиз
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/*
+          generate_release_notes: true

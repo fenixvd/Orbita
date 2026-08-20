@@ -1,0 +1,40 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/allfiles;inode/directory;
+Actions=OrbitaOpen;OrbitaPin;OrbitaUnpin;OrbitaShare;OrbitaUnshare;
+X-KDE-Submenu=Orbita
+X-KDE-Submenu[ru]=Orbita
+Icon=ru.rainedev.orbita
+
+# Первым не случайно: значок подменю KDE берёт именно у первого действия,
+# отдельного ключа для подменю нет.
+[Desktop Action OrbitaOpen]
+Name=Open Orbita window
+Name[ru]=Открыть окно Orbita
+Icon=ru.rainedev.orbita
+Exec=@ORBITA_GUI@
+
+[Desktop Action OrbitaPin]
+Name=Save on this device
+Name[ru]=Сохранить на устройстве
+Icon=download
+Exec=@ORBITA_CLI@ pin %F
+
+[Desktop Action OrbitaUnpin]
+Name=Remove from this device
+Name[ru]=Убрать с устройства
+Icon=edit-delete-remove
+Exec=@ORBITA_CLI@ unpin %F
+
+[Desktop Action OrbitaShare]
+Name=Copy public link
+Name[ru]=Поделиться ссылкой
+Icon=emblem-shared
+Exec=@ORBITA_CLI@ share %F
+
+[Desktop Action OrbitaUnshare]
+Name=Close public access
+Name[ru]=Закрыть доступ по ссылке
+Icon=object-locked
+Exec=@ORBITA_CLI@ unshare %F

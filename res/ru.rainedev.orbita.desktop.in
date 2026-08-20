@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Name=Orbita
+Name[ru]=Орбита
+GenericName=Yandex.Disk client
+GenericName[ru]=Клиент Яндекс.Диска
+Comment=Yandex.Disk client
+Comment[ru]=Клиент Яндекс.Диска
+Exec=@ORBITA_EXEC@
+Icon=ru.rainedev.orbita
+Terminal=false
+Categories=Utility;FileTools;Network;
+Keywords=yandex;disk;cloud;
+Keywords[ru]=яндекс;диск;облако;
+StartupNotify=true

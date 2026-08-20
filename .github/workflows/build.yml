@@ -1,0 +1,78 @@
+name: Сборка и тесты
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    container: ${{ matrix.image }}
+
+    # Четыре дистрибутива не для галочки: каталог модулей Qt у каждого свой,
+    # а версии KF6 расходятся на пару выпусков. Именно так нашлись
+    # несовпадение имён цели SQLite и отсутствие setIsMenu в KF6 6.13.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: openSUSE Tumbleweed
+            image: opensuse/tumbleweed
+            install: >-
+              zypper --non-interactive install -y gcc-c++ cmake ninja rpm-build tar gzip git
+              qt6-base-devel qt6-declarative-devel kf6-kio-devel
+              kf6-kstatusnotifieritem-devel fuse3-devel sqlite3-devel
+            package: RPM
+          - name: Fedora
+            image: fedora:latest
+            install: >-
+              dnf install -y --disablerepo="*openh264*" gcc-c++ cmake ninja-build rpm-build pkgconf-pkg-config tar git
+              qt6-qtbase-devel qt6-qtdeclarative-devel kf6-kio-devel
+              kf6-kstatusnotifieritem-devel fuse3-devel sqlite-devel
+            package: RPM
+          - name: Debian 13
+            image: debian:trixie
+            install: >-
+              apt-get update && apt-get install -y --no-install-recommends
+              build-essential cmake ninja-build pkg-config dpkg-dev file git
+              qt6-base-dev qt6-declarative-dev libkf6kio-dev
+              libkf6statusnotifieritem-dev libfuse3-dev libsqlite3-dev
+            package: DEB
+          - name: Arch
+            image: archlinux:latest
+            install: >-
+              pacman -Sy --noconfirm git gcc cmake ninja pkgconf qt6-base qt6-declarative
+              kio kstatusnotifieritem fuse3 sqlite
+            package: ""
+
+    steps:
+      - name: Зависимости
+        run: ${{ matrix.install }}
+
+      - uses: actions/checkout@v4
+
+      - name: Настройка
+        run: cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
+
+      - name: Сборка
+        run: cmake --build build
+
+      - name: Тесты
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Пакет
+        if: matrix.package != ''
+        run: cd build && cpack -G ${{ matrix.package }}
+
+      - name: Сохранить пакет
+        if: matrix.package != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          path: |
+            build/*.rpm
+            build/*.deb
+          if-no-files-found: error
