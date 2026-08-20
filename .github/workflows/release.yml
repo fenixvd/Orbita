@@ -59,8 +59,11 @@ jobs:
           cd build && cpack -G ${{ matrix.package }}
           # Имя дистрибутива в названии файла: пакеты RPM из openSUSE
           # и Fedora иначе не различить.
+          # Шаг идёт под sh -e: у несуществующего шаблона test вернёт 1
+          # и оборвёт всю сборку, поэтому пропускаем через continue.
           for f in *.rpm *.deb; do
-            [ -e "$f" ] && mv "$f" "${{ matrix.name }}-$f"
+            [ -e "$f" ] || continue
+            mv "$f" "${{ matrix.name }}-$f"
           done
 
       - uses: actions/upload-artifact@v5
