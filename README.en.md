@@ -13,6 +13,8 @@ and the most recent notable news about it is that it still exists.
 Orbita does what Windows has been doing for years: **the whole Disk is visible,
 but only the files you actually open take up space.**
 
+![The Orbita main window](docs/screenshots/main-window.png)
+
 ## Features
 
 - sign in with Yandex ID from the app — no tokens in config files, no curl;
@@ -29,6 +31,28 @@ but only the files you actually open take up space.**
   version is saved next to it instead of clobbering theirs;
 - tray icon, desktop notifications, autostart;
 - Russian and English interface.
+
+## Screenshots
+
+| Settings | About |
+|---|---|
+| ![The settings window](docs/screenshots/settings.png) | ![The about window](docs/screenshots/about.png) |
+
+| Tray icon menu | Picking a folder on the Disk |
+|---|---|
+| ![The system tray menu](docs/screenshots/tray-menu.png) | ![Picking a folder on the Disk](docs/screenshots/remote-folder-picker.png) |
+
+### Inside Dolphin
+
+The overlay tells you where the content is: a cloud with an arrow means it
+lives on the Disk only, a check mark means it is fully on this device, and
+folders have an in-between state as well.
+
+![State overlays in Dolphin](docs/screenshots/dolphin-emblems.png)
+
+| Menu on a local folder | Menu on a file from the Disk |
+|---|---|
+| ![The "Upload to Yandex.Disk" action](docs/screenshots/dolphin-menu-folder.png) | ![Keep on this device, share a link](docs/screenshots/dolphin-menu-file.png) |
 
 ## Installation
 
