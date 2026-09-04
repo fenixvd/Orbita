@@ -187,4 +187,4 @@ These are limits of the Yandex API, not laziness:
 GNU General Public License v2 — see [LICENSE](LICENSE).
 
 Orbita is not affiliated with Yandex. It is an independent client built on the
-public [Yandex.Disk API](https://yandex.com/dev/disk-api/).
+public [Yandex.Disk API](https://yandex.ru/dev/disk/).
