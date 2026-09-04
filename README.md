@@ -187,4 +187,4 @@ sudo cmake --install build
 GNU General Public License v2 — см. [LICENSE](LICENSE).
 
 Orbita не связана с Яндексом. Это независимый клиент, использующий
-публичный [API Яндекс.Диска](https://yandex.ru/dev/disk-api/).
+публичный [API Яндекс.Диска](https://yandex.ru/dev/disk/).
